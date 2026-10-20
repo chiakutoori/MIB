@@ -56,7 +56,7 @@ $basePath = $basePath ?? '';
     <div class="container">
       <div class="top-bar-left">
         <span class="top-bar-badge">CSLB Events Planning</span>
-        <span>MIB Photoman Official Web Scheduling & Notification System</span>
+        <span>Event photography with instant printed souvenirs</span>
       </div>
       <div class="top-bar-right">
         <span>📧 hello@mibphotoman.com</span>
@@ -78,18 +78,18 @@ $basePath = $basePath ?? '';
             MIB PHOTOMAN PH
             <span class="verified-dot" title="Verified Service"></span>
           </div>
-          <span class="brand-tagline">Onsite Photography &bull; Live Photo Souvenirs</span>
+          <span class="brand-tagline">Event Photography &bull; Instant Prints</span>
         </div>
       </a>
 
       <nav>
         <ul class="nav-links">
           <li><a href="<?= $basePath ?>index.php" class="nav-link <?= $currentPage === 'index.php' ? 'active' : '' ?>">Home</a></li>
-          <li><a href="<?= $basePath ?>packages.php" class="nav-link <?= $currentPage === 'packages.php' ? 'active' : '' ?>">Packages & Customizer</a></li>
-          <li><a href="<?= $basePath ?>booking.php" class="nav-link <?= $currentPage === 'booking.php' ? 'active' : '' ?>">Event Booking</a></li>
+          <li><a href="<?= $basePath ?>packages.php" class="nav-link <?= $currentPage === 'packages.php' ? 'active' : '' ?>">Packages</a></li>
+          <li><a href="<?= $basePath ?>booking.php" class="nav-link <?= $currentPage === 'booking.php' ? 'active' : '' ?>">Book an Event</a></li>
           
           <?php if (!$user): ?>
-            <li><a href="<?= $basePath ?>login.php" class="nav-link <?= $currentPage === 'login.php' ? 'active' : '' ?>">Portal Login</a></li>
+            <li class="nav-signin"><a href="<?= $basePath ?>login.php" class="nav-link <?= $currentPage === 'login.php' ? 'active' : '' ?>" data-auth-open="login">Sign In</a></li>
           <?php elseif ($user['role'] === 'admin'): ?>
             <li><a href="<?= $basePath ?>admin/index.php" class="nav-link <?= strpos($_SERVER['REQUEST_URI'] ?? '', '/admin/') !== false ? 'active' : '' ?>">Admin Panel</a></li>
           <?php elseif ($user['role'] === 'staff'): ?>
@@ -103,14 +103,14 @@ $basePath = $basePath ?? '';
       <div class="nav-actions">
         <?php if (!$user): ?>
           <a href="<?= $basePath ?>packages.php" class="btn btn-accent">Book Now!</a>
-          <a href="<?= $basePath ?>login.php" class="btn btn-outline">Sign In</a>
+          <a href="<?= $basePath ?>login.php" class="btn btn-outline" data-auth-open="login">Sign In</a>
         <?php else: ?>
           <?php if ($user['role'] === 'admin'): ?>
             <a href="<?= $basePath ?>admin/index.php" class="btn btn-accent">Admin Dashboard</a>
           <?php elseif ($user['role'] === 'staff'): ?>
             <a href="<?= $basePath ?>staff/index.php" class="btn btn-accent">My Assignments</a>
           <?php else: ?>
-            <a href="<?= $basePath ?>client/index.php" class="btn btn-accent">My Portal</a>
+            <a href="<?= $basePath ?>client/index.php" class="btn btn-accent">My Bookings</a>
           <?php endif; ?>
           <a href="<?= $basePath ?>logout.php" class="btn btn-outline">Sign Out</a>
         <?php endif; ?>

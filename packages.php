@@ -70,7 +70,7 @@ require_once __DIR__ . '/includes/header.php';
 
               <ul class="package-features">
                 <?php foreach ($inclusions as $inc): ?>
-                  <li>✓ <?= htmlspecialchars($inc) ?></li>
+                  <li><?= htmlspecialchars($inc) ?></li>
                 <?php endforeach; ?>
               </ul>
 

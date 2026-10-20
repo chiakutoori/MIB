@@ -164,14 +164,14 @@ if ($userCount == 0) {
             2,
             1,
             1,
-            'Perfect for intimate birthdays, product launches, and private banquets needing premium roving photo coverage.',
+            'Great for small birthdays, intimate dinners and product launches.',
             json_encode([
-                '2 Hours of Unlimited 4R High-Gloss Prints',
-                '1 Suited Roaming Photographer (Sony A7IV / Profoto)',
-                '1 Dedicated Onsite Dye-Sublimation Operator',
-                'Custom Single-Photo Layout Border & Branding',
-                'Full Digital High-Res Album within 24 Hours',
-                'Magnetic Backing on All Distributed Prints'
+                'Unlimited 4R glossy prints for 2 hours',
+                '1 suited photographer with professional camera and lighting',
+                '1 print station with its own operator',
+                'Custom photo border with your event\'s name or theme',
+                'Digital copies of all photos within 24 hours',
+                'Magnet backing on every print'
             ]),
             0
         ],
@@ -183,14 +183,14 @@ if ($userCount == 0) {
             3,
             2,
             1,
-            'The signature MIB Photoman experience for grand weddings, 18th debuts, and landmark celebrations.',
+            'Our most-booked package for weddings, 18th debuts and other big celebrations.',
             json_encode([
-                '3 Hours of Rapid Unlimited 4R Magnetic Prints',
-                '2 Suited Roaming Photographers (Multi-Angle Coverage)',
-                '1 Onsite Dye-Sublimation Station & Operator',
-                'Curated Multi-Photo Custom Overlay / Frame Design',
-                'Real-Time Live Cloud Gallery with QR Download',
-                'Complimentary Acrylic Desk Standees for VIP Tables'
+                'Unlimited 4R magnetic prints for 3 hours',
+                '2 suited photographers, so more guests get photographed',
+                '1 print station with its own operator',
+                'Custom photo frame that fits several photos per print',
+                'Online photo gallery guests can open by scanning a QR code',
+                'Free acrylic photo stands for VIP tables'
             ]),
             1
         ],
@@ -202,14 +202,14 @@ if ($userCount == 0) {
             4,
             2,
             2,
-            'Maximum bandwidth production designed for large-scale corporate galas, conventions, and celebrity receptions.',
+            'Built for large events like company galas, conventions and big receptions.',
             json_encode([
-                '4 Hours of Continuous Zero-Wait High-Yield Prints',
-                '2 Senior Suited Roaming Photographers',
-                '2 High-Speed DNP Dye-Sublimation Printing Stations',
-                'Dual Magnetic 4R + Customized 2x6 Photo Strip Formats',
-                'Same-Night Highlight Reel & Instant Cloud Sync',
-                'Personalized Velvet Keepsake Photo Album'
+                'Unlimited prints for 4 hours, with no waiting in line',
+                '2 senior suited photographers',
+                '2 print stations to keep up with large crowds',
+                '4R magnetic prints plus 2x6 photo strips',
+                'Highlight video and online gallery on the same night',
+                'Personalized velvet photo album to keep'
             ]),
             0
         ]

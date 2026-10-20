@@ -8,7 +8,7 @@ initPageLoader();
 
 document.addEventListener('DOMContentLoaded', () => {
   initSliders();
-  initAuthTabs();
+  initAuth();
   initBookingCalculator();
   initNavigationUser();
   initMobileNav();
@@ -150,99 +150,131 @@ function initSliders() {
       }, 5500);
     });
   });
+}
 
-  // Handle Book Now Click on Package Cards
-  const packageCards = document.querySelectorAll('.package-card');
-  packageCards.forEach((card) => {
-    const pkgId = card.getAttribute('data-package-id') || 'gold';
-    const bookOverlay = card.querySelector('.book-overlay');
-    const bookBtn = card.querySelector('.btn-select-pkg');
+/* ==========================================================
+   2. SIGN IN / CREATE ACCOUNT (MODAL + LOGIN PAGE)
+   ========================================================== */
+function initAuth() {
+  document.querySelectorAll('[data-auth-panel]').forEach(initAuthPanel);
 
-    const proceedToBooking = (e) => {
-      // Don't trigger if clicking slider arrows
-      if (e.target.closest('.slider-prev') || e.target.closest('.slider-next') || e.target.closest('.slider-dot')) {
-        return;
-      }
-      window.location.href = `booking.php?package=${pkgId}`;
-    };
+  const modal = document.getElementById('auth-modal');
+  if (!modal) return;
+  const dialogs = modal.querySelectorAll('[data-auth-dialog]');
+  let lastFocus = null;
 
-    if (bookOverlay) {
-      bookOverlay.addEventListener('click', proceedToBooking);
+  // Shows the Sign In or Create Account dialog, swapping if one is already open
+  const openModal = (mode) => {
+    if (modal.hidden) lastFocus = document.activeElement;
+    dialogs.forEach((dialog) => {
+      dialog.hidden = dialog.dataset.authDialog !== mode;
+      if (!dialog.hidden) dialog.querySelector('[data-auth-panel]').reset();
+    });
+    modal.hidden = false;
+    document.body.classList.add('auth-modal-open');
+    requestAnimationFrame(() => modal.classList.add('open'));
+    modal.querySelector('[data-auth-dialog]:not([hidden]) .form-input').focus();
+  };
+
+  const closeModal = () => {
+    modal.classList.remove('open');
+    document.body.classList.remove('auth-modal-open');
+    setTimeout(() => { if (!modal.classList.contains('open')) modal.hidden = true; }, 200);
+    if (lastFocus) lastFocus.focus();
+  };
+
+  document.querySelectorAll('[data-auth-open]').forEach((trigger) => {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelector('.main-header')?.classList.remove('nav-open');
+      openModal(trigger.getAttribute('data-auth-open'));
+    });
+  });
+
+  modal.querySelectorAll('[data-auth-close]').forEach((el) => el.addEventListener('click', closeModal));
+
+  modal.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+      return;
     }
-    if (bookBtn) {
-      bookBtn.addEventListener('click', proceedToBooking);
+    if (e.key !== 'Tab') return;
+    // Keep keyboard focus inside the dialog
+    const focusable = [...modal.querySelectorAll('button, a[href], input, select')]
+      .filter((el) => el.offsetParent !== null && !el.disabled);
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
     }
   });
 }
 
-/* ==========================================================
-   2. AUTHENTICATION TABS & ROLES (LOGIN/SIGNUP PAGE)
-   ========================================================== */
-function initAuthTabs() {
-  const authTabs = document.querySelectorAll('.auth-tab');
-  const loginForm = document.getElementById('login-form-container');
-  const signupForm = document.getElementById('signup-form-container');
-  const roleButtons = document.querySelectorAll('.role-btn');
+function initAuthPanel(panel) {
+  const errorBox = panel.querySelector('[data-auth-error]');
 
-  if (authTabs.length > 0) {
-    authTabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        authTabs.forEach((t) => t.classList.remove('active'));
-        tab.classList.add('active');
+  const showError = (message) => {
+    errorBox.textContent = message || '';
+    errorBox.hidden = !message;
+  };
 
-        const mode = tab.getAttribute('data-tab');
-        if (mode === 'login') {
-          if (loginForm) loginForm.style.display = 'block';
-          if (signupForm) signupForm.style.display = 'none';
-        } else {
-          if (loginForm) loginForm.style.display = 'none';
-          if (signupForm) signupForm.style.display = 'block';
+  panel.reset = () => showError('');
+
+  panel.querySelectorAll('[data-password-toggle]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const input = btn.previousElementSibling;
+      const reveal = input.type === 'password';
+      input.type = reveal ? 'text' : 'password';
+      btn.textContent = reveal ? 'Hide' : 'Show';
+      btn.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
+    });
+  });
+
+  // Submit in the background so errors appear inline instead of reloading the page
+  panel.querySelectorAll('.auth-form').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const invalid = [...form.querySelectorAll('.form-input')].find((input) => !input.checkValidity());
+      if (invalid) {
+        const name = form.querySelector(`label[for="${invalid.id}"]`).textContent.replace('(optional)', '').trim();
+        showError(invalid.validity.valueMissing ? `${name} is required.`
+          : invalid.validity.tooShort ? 'Your password must be at least 6 characters.'
+          : `Please enter a valid ${name.toLowerCase()}.`);
+        invalid.focus();
+        return;
+      }
+
+      const submit = form.querySelector('.auth-submit');
+      const label = submit.textContent;
+      submit.disabled = true;
+      submit.textContent = form.elements.action.value === 'signup' ? 'Creating account…' : 'Signing in…';
+      showError('');
+
+      // The hidden input named "action" shadows form.action, so read the attribute
+      const url = new URL(form.getAttribute('action'), window.location.href);
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        const data = await res.json();
+        if (data.ok) {
+          window.location.href = new URL(data.redirect, url).href;
+          return;
         }
-      });
+        showError(data.error || 'Something went wrong. Please try again.');
+      } catch (err) {
+        showError('Could not reach the server. Please try again.');
+      }
+      submit.disabled = false;
+      submit.textContent = label;
     });
-  }
-
-  // Role toggle
-  if (roleButtons.length > 0) {
-    roleButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        roleButtons.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        const role = btn.getAttribute('data-role');
-        const roleInput = document.getElementById('user-role-input');
-        if (roleInput) roleInput.value = role;
-      });
-    });
-  }
-
-  // Only attach mock client-side handlers if the form does not have an action attribute
-  const loginFormEl = document.getElementById('login-form');
-  if (loginFormEl && !loginFormEl.getAttribute('action')) {
-    loginFormEl.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = document.getElementById('login-email')?.value || 'client@example.com';
-      const role = document.querySelector('.role-btn.active')?.getAttribute('data-role') || 'client';
-      const name = email.split('@')[0].toUpperCase();
-
-      localStorage.setItem('mib_user', JSON.stringify({ name, email, role }));
-      alert(`Welcome back, ${name}! Logged in as ${role === 'staff' ? 'MIB Talent Crew' : 'Client'}.`);
-      window.location.href = 'index.php';
-    });
-  }
-
-  const signupFormEl = document.getElementById('signup-form');
-  if (signupFormEl && !signupFormEl.getAttribute('action')) {
-    signupFormEl.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('signup-name')?.value || 'Client';
-      const email = document.getElementById('signup-email')?.value || 'client@example.com';
-      const role = document.querySelector('.role-btn.active')?.getAttribute('data-role') || 'client';
-
-      localStorage.setItem('mib_user', JSON.stringify({ name, email, role }));
-      alert(`Account created successfully! Welcome to MIB Photoman, ${name}.`);
-      window.location.href = 'index.php';
-    });
-  }
+  });
 }
 
 /* ==========================================================
@@ -543,7 +575,8 @@ function initScrollReveal() {
 
   const targets = document.querySelectorAll(
     '.section-header, .feature-card, .package-card, .packages-top-banner, ' +
-    '.brand-placeholder-banner, .booking-form-box, .summary-card, .auth-card, .footer-grid > div'
+    '.brand-placeholder-banner, .booking-form-box, .summary-card, .auth-wrapper .auth-card, .footer-grid > div, ' +
+    '.review-card, .faq-list, .cta-card, .event-types'
   );
 
   // Stagger siblings in the same grid

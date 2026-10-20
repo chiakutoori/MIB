@@ -1,53 +1,40 @@
 # MIB PHOTOMAN PH - 25% System Structure Prototype
 **A Web-Based Package Customization and Scheduling Management System with Email Notification for MIB Photoman (under CSLB Events Planning)**
 
----
-
-## 📸 1. System Overview & Tech Stack
-This prototype implements the **25% operational scope** established in Chapter 1 of the thesis study. It eliminates the business's reliance on manual Facebook Messenger group chats, paper forms, and unorganized notes by providing an integrated web-based architecture.
+## System Overview & Tech Stack
+An integrated web-based platform for package customization, event scheduling, staff assignment, and email notifications, replacing manual Facebook Messenger group chats, paper forms, and unorganized notes.
 
 - **Backend:** PHP 8.3 (Native Built-in Server / Apache / Nginx)
 - **Database:** SQLite 3 with PDO (Self-initializing, zero external database setup required)
-- **Frontend:** Responsive HTML5, Modern CSS3 with Custom Properties & Glassmorphism, Vanilla ES6 JavaScript
-- **Aesthetic Theme:** Strict **Inverted Monochromatic (Black, White, Grey)** consistent with the MIB suit-and-tie logo.
-- **Background:** High-resolution team cover photo (`assets/images/mib-cover.jpg`) applied with a dark translucent scrim for legibility and cinematic branding.
+- **Frontend:** Responsive HTML5, CSS3, Vanilla ES6 JavaScript
+- **Theme:** Inverted Monochromatic (Black, White, Grey) with team cover photo background
 
----
+## Key Features
+- 4-step booking wizard (duration 2-8 hrs, 1-4 shooters, 1-3 print stations, add-ons) with live cost computation and fixed ₱2,000 down payment
+- Centralized SQLite database linking clients, event bookings, staff schedules, and notifications
+- Admin staff assignment with real-time double-booking conflict detection
+- Email notifications for booking confirmations, DP receipts, schedule reminders, and staff alerts
 
-## 🎯 2. Thesis Alignment (25% Foundation Scope)
+## User Roles
+- **Administrator** — Master overview, verify DP, assign crew, check conflicts
+- **Staff (Lead Photographer / Dye-Sub Operator)** — View assigned call times and station assignments
+- **Client / Event Host** — View reservation status, DP record, and assigned team
 
-| Thesis Specific Objective | System Implementation | Location |
-| :--- | :--- | :--- |
-| **1. Web-Based Customization & Scheduling** | Interactive 4-step wizard: duration (2–8 hrs), suited shooters (1–4), print stations (1–3), add-ons, live cost computation, fixed ₱2,000 down payment. | [`booking.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/booking.php), [`packages.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/packages.php) |
-| **2. Centralized Database** | Consolidated SQLite database via PDO linking clients, event bookings, staff schedules, journals, reviews, and notifications without duplication. | [`config/db.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/config/db.php) |
-| **3. Staff Assignment & Conflict Engine** | Admin delegates Lead Photographers and Operators; real-time double-booking conflict detection flags overlapping assignments. | [`admin/schedules.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/admin/schedules.php), [`staff/index.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/staff/index.php) |
-| **4. Post-Event Journaling** | Suited crew log total 4R prints distributed, estimated guest attendance, equipment status, and operational highlights/issues. | [`staff/journal.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/staff/journal.php), [`admin/journals.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/admin/journals.php) |
-| **5. Customer Service Reviews** | Clients submit 1–5 star ratings (overall, photographer presentation, print speed/magnet quality) and qualitative feedback for staff evaluations. | [`client/review.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/client/review.php), [`admin/reviews.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/admin/reviews.php) |
-| **6. Centralized Notification Engine** | System dispatches and audits simulated email notifications (Booking Confirmations, ₱2,000 DP receipts, Schedule Reminders, Staff Alerts). | [`admin/notifications.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/admin/notifications.php) |
+## Roadmap to 100% System
+The prototype implements the core scope; the following modules complete the full system:
 
----
+1. **Real Email Notification Engine** — SMTP delivery (e.g., PHPMailer) replacing the simulated dispatch, with automated schedule reminders.
+2. **Payment & Billing Module** — Online payment channels (GCash/Maya), PDF invoices and receipts, remaining-balance tracking, and refund handling.
+3. **Post-Event Journal Interface** — Staff screens for logging prints distributed, guest counts, and equipment status (database table already exists).
+4. **Customer Review Submission Flow** — Client-facing rating and feedback form (table exists; reviews are currently display-only).
+5. **Reports & Analytics** — Revenue, booking-trend, and staff-utilization reports with CSV/PDF export. *(Optional: financial reporting is outside the system's documented scope.)*
+6. **Master Calendar View** — Month-by-month calendar of locked vs. available event dates.
+7. **Package Management CRUD** — Admin screens to add, edit, and archive packages and pricing.
+8. **Staff/User Management** — Screens to add, edit, and deactivate staff accounts.
+9. **Client Booking Self-Service** — Cancel/reschedule requests and full booking-status lifecycle tracking.
+10. **Inquiry/Contact Form** — Working contact form routed to an admin inbox.
+11. **REST API Layer** — Endpoints for calendar sync and mobile/third-party integrations (the empty `api/` directory).
+12. **Production Deployment** — MySQL/PostgreSQL migration, HTTPS, CSRF protection, and real hosting.
 
-## 👥 3. User Roles & Evaluation Credentials
-
-You can test any role instantly using the **Quick 1-Click Demo Buttons** on [`login.php`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/login.php) or with manual credentials:
-
-| Role | Email | Password | Access Privileges |
-| :--- | :--- | :--- | :--- |
-| **Administrator** | `admin@mibphotoman.com` | `password123` | Master overview, verify ₱2k DP, assign crew, check conflicts, audit journals & notifications |
-| **Staff (Lead Photographer)** | `marcus@mibphotoman.com` | `password123` | View assigned call times, venue directives, submit post-event journals |
-| **Staff (Dye-Sub Operator)** | `isabella@mibphotoman.com` | `password123` | View printing station assignments, submit post-event journal logs |
-| **Client / Event Host** | `client@gmail.com` | `password123` | View reservation status, ₱2,000 DP record, assigned team, submit service review |
-
----
-
-## 🚀 4. How to Run
-
-### Method A: Quick Double-Click (Windows)
-Double-click [`run_server.bat`](file:///C:/Users/Christian/Downloads/MIB_PHP_Prototype/run_server.bat). It automatically starts the PHP web server on `http://localhost:8000`.
-
-### Method B: Terminal / PowerShell
-```powershell
-cd C:\Users\Christian\Downloads\MIB_PHP_Prototype
-php -S localhost:8000
-```
-Open `http://localhost:8000` in any web browser.
+## How to Run
+Double-click `run_server.bat`, or run `php -S localhost:8000` from the project folder, then open `http://localhost:8000` in any web browser.

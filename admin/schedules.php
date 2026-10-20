@@ -124,9 +124,6 @@ require_once __DIR__ . '/../includes/header.php';
           <a href="index.php" class="portal-pill">📊 Overview</a>
           <a href="bookings.php" class="portal-pill">📋 Bookings & Payments</a>
           <a href="schedules.php" class="portal-pill active">👥 Crew Schedules</a>
-          <a href="journals.php" class="portal-pill">📝 Post-Event Journals</a>
-          <a href="reviews.php" class="portal-pill">⭐ Customer Reviews</a>
-          <a href="notifications.php" class="portal-pill">✉️ Notification Logs</a>
         </div>
       </div>
 

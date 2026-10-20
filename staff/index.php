@@ -1,7 +1,7 @@
 <?php
 /**
  * MIB PHOTOMAN - Talent Staff Portal
- * Displays delegated assignments, call times, venue directives, and access to post-event journaling
+ * Displays delegated assignments, call times, and venue directives
  */
 
 require_once __DIR__ . '/../config/db.php';
@@ -17,8 +17,7 @@ $user = currentUser();
 // Fetch assignments for this staff member
 $assignments = $db->prepare("
     SELECT sa.*, b.booking_ref, b.event_type, b.event_date, b.event_time, b.venue_name, b.venue_address,
-           b.package_name, b.booking_status,
-           (SELECT id FROM post_event_journals pj WHERE pj.booking_id = b.id AND pj.staff_id = sa.staff_id) as journal_id
+           b.package_name, b.booking_status
     FROM staff_assignments sa
     JOIN bookings b ON sa.booking_id = b.id
     WHERE sa.staff_id = ?
@@ -39,10 +38,6 @@ require_once __DIR__ . '/../includes/header.php';
           <span class="section-tag">Talent Operations</span>
           <h1 style="font-size: 1.8rem; font-weight: 800; font-family: var(--font-logo);">MIB Crew Schedule & Deployment</h1>
           <p style="color: var(--color-gray-400); font-size: 0.9rem;">Welcome, <strong><?= htmlspecialchars($user['full_name']) ?></strong> (<?= htmlspecialchars($user['role_title']) ?>).</p>
-        </div>
-
-        <div style="display: flex; gap: 10px;">
-          <a href="journal.php" class="btn btn-accent">+ Log Post-Event Journal</a>
         </div>
       </div>
 
@@ -120,16 +115,6 @@ require_once __DIR__ . '/../includes/header.php';
                     <span style="color: var(--color-gray-400);">Package Deployed:</span> <strong><?= htmlspecialchars($ev['package_name']) ?></strong><br>
                     <span style="color: var(--color-gray-400);">Management Directives:</span> <em><?= htmlspecialchars($ev['notes'] ?: 'Standard MIB Protocol.') ?></em>
                   </div>
-                </div>
-
-                <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--color-gray-200); padding-top: 14px;">
-                  <?php if ($ev['journal_id']): ?>
-                    <span class="badge badge-completed" style="padding: 8px 14px;">✓ Post-Event Journal Logged</span>
-                  <?php else: ?>
-                    <a href="journal.php?booking_id=<?= $ev['booking_id'] ?>" class="btn btn-accent" style="font-size: 0.85rem; padding: 8px 16px;">
-                      📝 Log Post-Event Journal &rarr;
-                    </a>
-                  <?php endif; ?>
                 </div>
               </div>
             <?php endforeach; ?>

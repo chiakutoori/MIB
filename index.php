@@ -289,7 +289,7 @@ require_once __DIR__ . '/includes/header.php';
         </details>
         <details class="faq-item">
           <summary>How do I check my booking after I submit it?</summary>
-          <p>You'll get a booking reference number right after you submit the form. Sign in, or create an account with the same email you booked with, to see your booking status and assigned photographers, and to leave a review after the event.</p>
+          <p>You'll get a booking reference number right after you submit the form. Sign in, or create an account with the same email you booked with, to see your booking status and assigned photographers.</p>
         </details>
       </div>
     </div>

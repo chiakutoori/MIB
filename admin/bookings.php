@@ -34,12 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         $b = $db->query("SELECT * FROM bookings WHERE id = $bookingId")->fetch();
         if ($b) {
-            // Send client review invitation email notification!
-            $reviewMsg = "Dear {$b['client_name']},\n\nThank you for choosing MIB Photoman for your {$b['event_type']}! We hope your guests enjoyed their instant souvenir prints.\n\nPlease take 1 minute to submit your service rating and feedback in the MIB Portal for internal team evaluation.";
-            $db->prepare("INSERT INTO notifications (recipient_email, recipient_role, title, message, notification_type) VALUES (?, 'client', ?, ?, 'review_request')")
-               ->execute([$b['client_email'], "How was your experience? - {$b['booking_ref']}", $reviewMsg]);
+            // Send client completion email notification!
+            $completionMsg = "Dear {$b['client_name']},\n\nThank you for choosing MIB Photoman for your {$b['event_type']}! We hope your guests enjoyed their instant souvenir prints.\n\nYour event has been marked as completed and your remaining balance is now due at settlement.";
+            $db->prepare("INSERT INTO notifications (recipient_email, recipient_role, title, message, notification_type) VALUES (?, 'client', ?, ?, 'event_completed')")
+               ->execute([$b['client_email'], "Event Completed - {$b['booking_ref']}", $completionMsg]);
         }
-        setFlash('success', "Event marked as completed! Automated review invitation dispatched to client.");
+        setFlash('success', "Event marked as completed! Automated completion notice dispatched to client.");
     }
     header("Location: bookings.php");
     exit;
@@ -80,9 +80,6 @@ require_once __DIR__ . '/../includes/header.php';
           <a href="index.php" class="portal-pill">📊 Overview</a>
           <a href="bookings.php" class="portal-pill active">📋 Bookings & Payments</a>
           <a href="schedules.php" class="portal-pill">👥 Crew Schedules</a>
-          <a href="journals.php" class="portal-pill">📝 Post-Event Journals</a>
-          <a href="reviews.php" class="portal-pill">⭐ Customer Reviews</a>
-          <a href="notifications.php" class="portal-pill">✉️ Notification Logs</a>
         </div>
       </div>
 

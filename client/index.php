@@ -1,7 +1,7 @@
 <?php
 /**
  * MIB PHOTOMAN - Client / Event Host Portal
- * Displays reserved bookings, fixed ₱2,000 DP verification status, assigned crew, and review submission link
+ * Displays reserved bookings, fixed ₱2,000 DP verification status, and assigned crew
  */
 
 require_once __DIR__ . '/../config/db.php';
@@ -20,8 +20,7 @@ $bookingsStmt = $db->prepare("
            (SELECT GROUP_CONCAT(u.full_name || ' (' || sa.role_in_event || ')', ', ') 
             FROM staff_assignments sa 
             JOIN users u ON sa.staff_id = u.id 
-            WHERE sa.booking_id = b.id) as assigned_crew,
-           (SELECT id FROM customer_reviews cr WHERE cr.booking_id = b.id) as review_id
+            WHERE sa.booking_id = b.id) as assigned_crew
     FROM bookings b
     WHERE b.client_id = ? OR b.client_email = ?
     ORDER BY b.event_date DESC
@@ -40,7 +39,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div>
           <span class="section-tag">Client Portal</span>
           <h1 style="font-size: 1.8rem; font-weight: 800; font-family: var(--font-logo);">My Event Reservations</h1>
-          <p style="color: var(--color-gray-400); font-size: 0.9rem;">Welcome, <strong><?= htmlspecialchars($user['full_name']) ?></strong>. Monitor reservation verification, assigned crew, and post-event reviews.</p>
+          <p style="color: var(--color-gray-400); font-size: 0.9rem;">Welcome, <strong><?= htmlspecialchars($user['full_name']) ?></strong>. Monitor reservation verification and your assigned crew.</p>
         </div>
 
         <div style="display: flex; gap: 10px;">
@@ -147,21 +146,6 @@ require_once __DIR__ . '/../includes/header.php';
                       <strong>₱<?= number_format($balance, 2) ?></strong>
                     </div>
                   </div>
-                </div>
-
-                <!-- Actions Footer -->
-                <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--color-gray-200); padding-top: 16px;">
-                  <?php if ($b['review_id']): ?>
-                    <span class="badge badge-completed" style="padding: 8px 14px;">✓ Service Review Submitted</span>
-                  <?php elseif ($b['booking_status'] === 'completed'): ?>
-                    <a href="review.php?booking_id=<?= $b['id'] ?>" class="btn btn-accent" style="font-size: 0.85rem; padding: 8px 18px;">
-                      ⭐ Submit 5-Star Service Review &rarr;
-                    </a>
-                  <?php else: ?>
-                    <span style="font-size: 0.8rem; color: var(--color-gray-500); align-self: center;">
-                      Review unlocks after event completion.
-                    </span>
-                  <?php endif; ?>
                 </div>
               </div>
             <?php endforeach; ?>

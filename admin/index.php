@@ -1,7 +1,7 @@
 <?php
 /**
  * MIB PHOTOMAN - Administrator Command Center
- * 25% Scope Foundation: Manages bookings, approves down payments, monitors staff delegation & notification logs
+ * 25% Scope Foundation: Manages bookings, approves down payments, monitors staff delegation
  */
 
 require_once __DIR__ . '/../config/db.php';
@@ -37,7 +37,6 @@ $totalBookings = $db->query("SELECT COUNT(*) FROM bookings")->fetchColumn();
 $pendingBookings = $db->query("SELECT COUNT(*) FROM bookings WHERE payment_status = 'dp_submitted' OR booking_status = 'pending'")->fetchColumn();
 $confirmedBookings = $db->query("SELECT COUNT(*) FROM bookings WHERE booking_status = 'confirmed'")->fetchColumn();
 $staffCount = $db->query("SELECT COUNT(*) FROM users WHERE role = 'staff'")->fetchColumn();
-$avgRating = $db->query("SELECT ROUND(AVG(rating), 1) FROM customer_reviews")->fetchColumn() ?: '5.0';
 
 // Check for staff scheduling conflicts (same staff assigned to multiple events on the same date)
 $conflicts = $db->query("
@@ -70,16 +69,13 @@ require_once __DIR__ . '/../includes/header.php';
         <div>
           <span class="section-tag">Executive Management</span>
           <h1 style="font-size: 1.8rem; font-weight: 800; font-family: var(--font-logo);">Admin Command Center</h1>
-          <p style="color: var(--color-gray-400); font-size: 0.9rem;">Master operational console for bookings, staff scheduling, journals, and notification audit logs.</p>
+          <p style="color: var(--color-gray-400); font-size: 0.9rem;">Master operational console for bookings and staff scheduling.</p>
         </div>
 
         <div class="portal-nav-pills">
           <a href="index.php" class="portal-pill active">📊 Overview</a>
           <a href="bookings.php" class="portal-pill">📋 Bookings & Payments</a>
           <a href="schedules.php" class="portal-pill">👥 Crew Schedules</a>
-          <a href="journals.php" class="portal-pill">📝 Post-Event Journals</a>
-          <a href="reviews.php" class="portal-pill">⭐ Customer Reviews</a>
-          <a href="notifications.php" class="portal-pill">✉️ Notification Logs</a>
         </div>
       </div>
 
@@ -121,12 +117,6 @@ require_once __DIR__ . '/../includes/header.php';
           <div class="stat-val"><?= $staffCount ?></div>
           <div class="stat-sub">Suited shooters & operators</div>
         </div>
-
-        <div class="stat-box">
-          <div class="stat-label">Client Satisfaction</div>
-          <div class="stat-val" style="color: #fbbf24;"><?= $avgRating ?> ★</div>
-          <div class="stat-sub">Average service review</div>
-        </div>
       </div>
 
       <!-- Quick Actions Grid -->
@@ -143,17 +133,6 @@ require_once __DIR__ . '/../includes/header.php';
           <p style="font-size: 0.8rem; color: var(--color-gray-400); margin-top: 4px;">Assign lead photographers and printer techs with conflict check.</p>
         </a>
 
-        <a href="journals.php" class="panel-card" style="margin-bottom: 0; padding: 20px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
-          <div style="font-size: 1.5rem; margin-bottom: 8px;">📖</div>
-          <strong style="color: var(--color-white); font-size: 1.05rem;">Audit Post-Event Notes</strong>
-          <p style="font-size: 0.8rem; color: var(--color-gray-400); margin-top: 4px;">Review internal prints distributed, guest attendance, and gear health.</p>
-        </a>
-
-        <a href="notifications.php" class="panel-card" style="margin-bottom: 0; padding: 20px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
-          <div style="font-size: 1.5rem; margin-bottom: 8px;">✉️</div>
-          <strong style="color: var(--color-white); font-size: 1.05rem;">Notification Audit Logs</strong>
-          <p style="font-size: 0.8rem; color: var(--color-gray-400); margin-top: 4px;">View live records of dispatches sent to clients and staff members.</p>
-        </a>
       </div>
 
       <!-- Master Event Schedule & Action Queue -->

@@ -18,7 +18,7 @@ $oldRole = ($authOld['role'] ?? 'client') === 'staff' ? 'staff' : 'client';
   <div class="auth-header">
     <img src="<?= $basePath ?>assets/images/mib-logo.jpg" alt="" class="auth-logo">
     <h2 class="auth-title" id="auth-title-login">Welcome back</h2>
-    <p class="auth-subtitle">Sign in to manage bookings, crew schedules and reviews.</p>
+    <p class="auth-subtitle">Sign in to manage bookings and crew schedules.</p>
   </div>
 
   <div class="auth-alert" role="alert" data-auth-error <?= $authError ? '' : 'hidden' ?>><?= htmlspecialchars($authError ?? '') ?></div>
@@ -56,7 +56,7 @@ $oldRole = ($authOld['role'] ?? 'client') === 'staff' ? 'staff' : 'client';
   <div class="auth-header">
     <img src="<?= $basePath ?>assets/images/mib-logo.jpg" alt="" class="auth-logo">
     <h2 class="auth-title" id="auth-title-signup">Create your account</h2>
-    <p class="auth-subtitle">Book events, track your ₱2,000 down payment and leave reviews.</p>
+    <p class="auth-subtitle">Book events and track your ₱2,000 down payment.</p>
   </div>
 
   <div class="auth-alert" role="alert" data-auth-error <?= $authError ? '' : 'hidden' ?>><?= htmlspecialchars($authError ?? '') ?></div>
